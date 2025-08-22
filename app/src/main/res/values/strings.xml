@@ -1,0 +1,43 @@
+<resources>
+    <!-- App name -->
+    <string name="app_name">MyDatingProfileHelper</string>
+
+    <!-- Button texts -->
+    <string name="button_sign_in_google">Войти через Google</string>
+    <string name="button_save_profile">Сохранить профиль</string>
+
+    <!-- Screen titles (placeholder) -->
+    <string name="title_profile">Профиль</string>
+    <string name="title_home">Главная</string>
+    <string name="title_cards">Карточки</string>
+    <string name="title_settings">Настройки</string>
+
+    <!-- Profile screen labels -->
+    <string name="label_name">Имя:</string>
+    <string name="label_interests">Интересы:</string>
+    <string name="label_dating_goals">Цели знакомства:</string>
+    <string name="label_description">Описание:</string>
+    <string name="label_crystal_balance">Кристаллы:</string>
+    <string name="hint_name">Введите имя</string>
+    <string name="hint_interests">Введите интересы через запятую</string>
+    <string name="hint_dating_goals">Введите цели знакомства через запятую</string>
+    <string name="hint_description">Напишите о себе</string>
+
+    <!-- Settings screen labels -->
+    <string name="settings_language">Язык</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">Английский</string>
+    <string name="settings_theme">Тема</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="settings_neural_network_api">API нейросети</string>
+    <string name="settings_api_option_1">Нейросеть 1 (Заглушка)</string>
+    <string name="settings_api_option_2">Нейросеть 2 (Заглушка)</string>
+
+    <!-- Messages -->
+    <string name="message_profile_saved">Профиль сохранен</string>
+    <string name="message_not_enough_crystals">Недостаточно кристаллов</string>
+    <string name="message_payment_successful">Оплата прошла успешно</string>
+    <string name="message_payment_failed">Ошибка оплаты</string>
+
+</resources>
