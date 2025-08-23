@@ -1,10 +1,17 @@
 package com.jounik_projects.mydatingprofilehelper.data.repository
 
 import com.jounik_projects.mydatingprofilehelper.data.model.UserProfile
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.jounik_projects.mydatingprofilehelper.data.api.DatingProfileApiService
 import com.jounik_projects.mydatingprofilehelper.data.api.NeuralNetworkApiService
+import com.jounik_projects.mydatingprofilehelper.data.network.api.UserProfileApi
 import com.google.android.gms.drive.DriveClient
+import com.jounik_projects.mydatingprofilehelper.data.network.model.GenerateProfileRequest
+import com.jounik_projects.mydatingprofilehelper.data.network.model.GeneratedProfileHistoryDto
+import com.jounik_projects.mydatingprofilehelper.data.network.model.SaveGeneratedProfileHistoryRequest
+import com.jounik_projects.mydatingprofilehelper.data.network.RetrofitClient
+import com.jounik_projects.mydatingprofilehelper.auth.AuthTokenProvider // Импорт AuthTokenProvider
+import com.jounik_projects.mydatingprofilehelper.data.network.model.SaveUserProfileRequest
+import com.jounik_projects.mydatingprofilehelper.data.network.model.TransactionDto // Импорт TransactionDto
 
 /**
  * Repository for managing user profile data.
@@ -14,11 +21,10 @@ import com.google.android.gms.drive.DriveClient
 class UserRepository {
 
  // In a real application, you might inject these dependencies
- private var currentUserProfile: UserProfile? = null // Placeholder for in-memory profile
-
-    // Private properties for API service instances
-    private val datingProfileApiService = DatingProfileApiService()
-    private val neuralNetworkApiService = NeuralNetworkApiService()
+    private var currentUserProfile: UserProfile? = null // Placeholder for in-memory profile
+    // Private property for Retrofit API service
+    private val datingProfileApiService = RetrofitClient.datingProfileApiService // Используем Retrofit сервис
+ private val userProfileApi: UserProfileApi = // TODO: Инициализируйте UserProfileApi с Retrofit
 
     /**
      * Saves the user profile data.
@@ -26,9 +32,10 @@ class UserRepository {
      * to persist the user's profile.
      * @param userProfile The UserProfile object to save.
      */
-    fun saveUserProfile(userProfile: UserProfile) { // TODO: Make this suspendable and handle asynchronous operations
- this.currentUserProfile = userProfile // Update in-memory profile
- // TODO: Implement saving logic (API, Google Drive) - In a real app, this would involve backend API calls and Google Drive backup.
+    suspend fun saveUserProfile(userProfile: UserProfile) {
+        // Преобразуем модель UserProfile в запрос для API
+        val request = SaveUserProfileRequest(userProfile.userId, userProfile.name, userProfile.photos, userProfile.interests, userProfile.datingGoals, userProfile.description, userProfile.gender) // Адаптируйте поля согласно SaveUserProfileRequest, добавлено поле gender
+ userProfileApi.saveUserProfile(request) // Отправляем запрос на бэкенд
         // When saving, consider using the NeuralNetworkApiService to potentially improve the description
  // val improvedDescription = neuralNetworkApiService.generateProfileDescription(userProfile.description) // This call would likely need to be suspendable
         println("Saving user profile for user: ${userProfile.userId}")
@@ -41,12 +48,17 @@ class UserRepository {
      * @param userId The ID of the user whose profile to load.
      * @return The loaded UserProfile object, or null if not found.
      */
-    fun loadUserProfile(userId: String): UserProfile? { // TODO: Make this suspendable and handle asynchronous operations
-        // When loading, consider fetching sample descriptions from DatingProfileApiService for the Home screen
- // val sampleDescriptions = datingProfileApiService.getProfileDescriptions() // This call would likely need to be suspendable
- // TODO: Implement loading logic (API, Google Drive) - In a real app, this would involve fetching from backend API first, then Google Drive if needed.
- return currentUserProfile // Return in-memory profile for now
-        println("Loading user profile for user: $userId")
+    suspend fun loadUserProfile(userId: String): UserProfile? {
+        // Загружаем профиль пользователя с бэкенда по userId
+        return try {
+            val userProfileDto = userProfileApi.getUserProfile(userId)
+            // Преобразуйте UserProfileDto в вашу локальную модель UserProfile
+            // return UserProfile(...) // Создайте объект UserProfile из userProfileDto
+            null // Пока возвращаем null, нужна реализация преобразования DTO -> Model
+        } catch (e: Exception) {
+            println("Error loading user profile: ${e.message}")
+            null // Обработка ошибок загрузки
+        }
         return null // Placeholder
     }
 
@@ -56,9 +68,10 @@ class UserRepository {
      * It will interact with the API and Google Drive to synchronize changes.
      * @param userProfile The UserProfile object with updated data.
      */
-    fun updateUserProfile(userProfile: UserProfile) { // TODO: Make this suspendable and handle asynchronous operations
- this.currentUserProfile = userProfile // Update in-memory profile
- // TODO: Implement updating logic (API, Google Drive) - In a real app, this would involve backend API calls and Google Drive backup.
+    suspend fun updateUserProfile(userProfile: UserProfile) {
+        // Преобразуем модель UserProfile в запрос для API обновления профиля
+        val request = SaveUserProfileRequest(userProfile.userId, userProfile.name, userProfile.photos, userProfile.interests, userProfile.datingGoals, userProfile.description, userProfile.gender) // Адаптируйте поля согласно SaveUserProfileRequest, добавлено поле gender
+ userProfileApi.saveUserProfile(request) // Отправляем запрос на бэкенд (можно использовать тот же endpoint для создания/обновления)
         println("Updating user profile for user: ${userProfile.userId}")
     }
 
@@ -108,8 +121,7 @@ class UserRepository {
      * @return A list of profile description strings.
      */
     suspend fun getProfileDescriptions(): List<String> {
-        // Call the DatingProfileApiService to get the descriptions
- return datingProfileApiService.getProfileDescriptions()
+ return datingProfileApiService.getProfileDescriptions() // Вызываем соответствующий метод API через Retrofit
     }
 
     /**
@@ -119,8 +131,46 @@ class UserRepository {
      * @return The generated or improved profile description string.
      */
     suspend fun generateProfileDescription(input: String): String {
-        // Call the NeuralNetworkApiService to generate or improve the description
- return neuralNetworkApiService.generateProfileDescription(input)
+        // Вызываем API бэкенда для генерации описания.
+        // Бэкенд сам соберет данные профиля по UserId из токена и подготовит промт.
+        return try {
+            // Если бэкенд ожидает UserId в теле запроса, создайте GenerateProfileRequest:
+            // val request = GenerateProfileRequest(userId) // Нужен доступ к userId здесь или передать его как параметр
+            // userProfileApi.generateProfileDescription(request).generatedText
+            // Если бэкенд берет UserId из токена, просто вызываем метод API:
+ userProfileApi.generateProfileDescription().generatedText // Предполагается, что API возвращает GeneratedTextResponse
+        } catch (e: Exception) {
+            "Error generating profile description: ${e.message}" // Простая обработка ошибки для примера
+        }
+    }
+
+    /**
+     * Получает текущий баланс кристаллов пользователя с бэкенда.
+     * @return Текущий баланс кристаллов.
+     */
+    suspend fun getCrystalBalance(): Int {
+ return datingProfileApiService.getCrystalBalance() // Вызываем метод API для получения баланса
+    }
+
+    /**
+     * Добавляет сгенерированное описание к профилю текущего пользователя и сохраняет его на бэкенде.
+     * @param description Текст сгенерированного описания для добавления.
+     */
+    suspend fun addDescriptionToUserProfile(description: String) {
+        // Создаем запрос для сохранения сгенерированной истории
+        val request = SaveGeneratedProfileHistoryRequest(generatedText = description, inputParameters = null) // inputParameters пока null, если не передаются
+
+        // TODO: Получить ID текущего пользователя. Это может быть из SharedPreferences, ViewModel или другого источника.
+        // Важно: В реальном приложении нужно иметь надежный способ получить ID текущего авторизованного пользователя.
+        // Например, получить из AuthTokenProvider:
+        // val currentUserId = AuthTokenProvider.getUserId() ?: throw IllegalStateException("User ID not found")
+        // Вам нужно будет заменить "some_user_id" на реальный код получения ID пользователя
+        val currentUserId = "some_user_id" 
+
+        // Вызываем метод API для сохранения сгенерированной истории
+ datingProfileApiService.saveGeneratedProfileHistory(request)
+
+        println("Adding generated description to user profile history for user: $currentUserId")
     }
 
     /**
@@ -158,5 +208,36 @@ class UserRepository {
         // 6. Handle asynchronous operations (using Tasks API or Coroutines) and potential errors (file not found, read errors).
         println("Loading user profile from Google Drive")
         return null // Placeholder
+    }
+
+    /**
+     * Saves the generated profile history to the backend API.
+     * @param userProfileId The ID of the user profile.
+     * @param generatedText The generated profile text.
+     * @param inputParameters The input parameters used for generation (optional).
+     */
+     * Gets the latest generated profile history for a user profile from the backend API.
+     * @param userProfileId The ID of the user profile.
+     * @return The latest GeneratedProfileHistoryDto, or null if not found.
+     */
+    suspend fun getLatestGeneratedProfileHistory(userProfileId: String): GeneratedProfileHistoryDto? {
+ return userProfileApi.getLatestGeneratedProfileHistory(userProfileId)
+    }
+
+    /**
+     * Gets all generated profile history for a user profile from the backend API.
+     * @param userProfileId The ID of the user profile.
+     * @return A list of GeneratedProfileHistoryDto.
+     */
+    suspend fun getAllGeneratedProfileHistory(userProfileId: String): List<GeneratedProfileHistoryDto> {
+ return userProfileApi.getAllGeneratedProfileHistory(userProfileId)
+    }
+
+    /**
+     * Асинхронно получает историю транзакций текущего пользователя с бэкенда.
+     * @return Список объектов TransactionDto.
+     */
+    suspend fun getTransactionHistory(): List<TransactionDto> {
+ return datingProfileApiService.getTransactionHistory()
     }
 }

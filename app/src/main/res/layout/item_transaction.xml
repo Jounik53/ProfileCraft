@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Разметка для одного элемента списка истории транзакций -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:layout_marginBottom="4dp"
+    android:background="@android:color/white"
+    android:elevation="2dp">
+
+    <!-- TextView для отображения суммы транзакции -->
+    <TextView
+        android:id="@+id/text_transaction_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Сумма: "/>
+
+    <!-- TextView для отображения типа транзакции -->
+    <TextView
+        android:id="@+id/text_transaction_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="Тип: "/>
+
+    <!-- TextView для отображения метки времени транзакции -->
+    <TextView
+        android:id="@+id/text_transaction_timestamp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        android:text="Дата: "/>
+
+    <!-- TextView для отображения деталей транзакции (опционально) -->
+    <TextView
+        android:id="@+id/text_transaction_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="Детали: "/>
+
+</LinearLayout>

@@ -2,7 +2,6 @@ package com.jounik_projects.mydatingprofilehelper.ui.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jounik_projects.mydatingprofilehelper.data.model.UserProfile
 import com.jounik_projects.mydatingprofilehelper.data.repository.UserRepository
@@ -19,14 +18,18 @@ class ProfileViewModel(private val userRepository: UserRepository) : ViewModel()
     private val _userProfile = MutableLiveData<UserProfile?>()
     val userProfile: LiveData<UserProfile?> = _userProfile
 
+    // LiveData to hold the generated profile description.
+    private val _generatedDescription = MutableLiveData<String?>()
+    val generatedDescription: LiveData<String?> = _generatedDescription
+
     /**
      * Loads the user profile from the repository.
      * This function uses a coroutine to perform the operation asynchronously.
      */
     fun loadUserProfile() {
         viewModelScope.launch {
-            // Call the load function from the repository.
-            // The actual implementation of loading (from Drive or API) will be in UserRepository.
+            // Загрузить профиль пользователя из репозитория.
+            // Используем метод репозитория, который обращается к API.
             val profile = userRepository.loadProfile() // Assuming a loadProfile function that handles data source
             _userProfile.postValue(profile) // Update the LiveData with the loaded profile.
         }
@@ -38,8 +41,8 @@ class ProfileViewModel(private val userRepository: UserRepository) : ViewModel()
      */
     fun saveUserProfile(userProfile: UserProfile) {
         viewModelScope.launch {
-            // Call the save function in the repository.
-            // The actual implementation of saving (to Drive or API) will be in UserRepository.
+            // Сохранить профиль пользователя через репозиторий.
+            // Используем метод репозитория, который обращается к API.
             userRepository.saveProfile(userProfile) // Assuming a saveProfile function that handles data source
             _userProfile.postValue(userProfile) // Optionally update LiveData after successful save
         }
@@ -67,6 +70,19 @@ class ProfileViewModel(private val userRepository: UserRepository) : ViewModel()
  fun creditCrystals(amount: Int) {
  userRepository.creditCrystals(amount)
         _userProfile.value = _userProfile.value?.copy(crystals = _userProfile.value?.crystals?.plus(amount) ?: 0)
+    }
+
+    /**
+ * Initiates the process of generating a profile description using the neural network.
+ * Calls the corresponding function in UserRepository and updates the LiveData with the result.
+ */
+ fun generateProfileDescription() {
+ viewModelScope.launch {
+ // Вызвать функцию в репозитории для запуска генерации анкеты.
+ // Репозиторий обратится к соответствующему API на бэкенде.
+ val generatedText = userRepository.generateProfileDescription() // Предполагаем, что этот метод вызывает API нейросети
+ _generatedDescription.postValue(generatedText) // Обновить LiveData со сгенерированным текстом.
+        }
     }
 
 

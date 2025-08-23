@@ -3,10 +3,15 @@ package com.jounik_projects.mydatingprofilehelper.ui.navigation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.activity.viewModels // Импортируем для использования activityViewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jounik_projects.mydatingprofilehelper.R
 import com.jounik_projects.mydatingprofilehelper.ui.cards.CardsFragment
 import com.jounik_projects.mydatingprofilehelper.ui.profile.ProfileFragment
+import com.jounik_projects.mydatingprofilehelper.ui.user.UserViewModel // Предполагается, что у вас есть UserViewModel
+import android.widget.TextView // Импортируем TextView
+import com.jounik_projects.mydatingprofilehelper.ui.history.HistoryFragment
 import com.jounik_projects.mydatingprofilehelper.ui.home.HomeFragment
 import com.jounik_projects.mydatingprofilehelper.ui.settings.SettingsFragment
 
@@ -17,6 +22,12 @@ import com.jounik_projects.mydatingprofilehelper.ui.settings.SettingsFragment
  */
 class BottomNavigationActivity : AppCompatActivity() {
 
+    // ViewModel для управления данными пользователя (предполагается ее существование)
+    private val userViewModel: UserViewModel by viewModels()
+
+    // TextView для отображения баланса кристаллов
+    private lateinit var textCrystalBalance: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Устанавливаем разметку для этой активности
@@ -24,6 +35,10 @@ class BottomNavigationActivity : AppCompatActivity() {
 
         // Находим BottomNavigationView в разметке
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+        // Находим TextView для баланса кристаллов в разметке
+        textCrystalBalance = findViewById(R.id.text_crystal_balance)
+
 
         // Устанавливаем слушатель для выбора пунктов меню
         // При выборе пункта меню, заменяем текущий фрагмент в контейнере
@@ -42,6 +57,10 @@ class BottomNavigationActivity : AppCompatActivity() {
                 }
                 R.id.navigation_settings -> {
                     selectedFragment = SettingsFragment()
+                }
+                // Обработка выбора пункта меню "История"
+                R.id.navigation_history -> {
+                    selectedFragment = HistoryFragment()
                 }
             }
             // Загружаем выбранный фрагмент, если он не null
@@ -64,5 +83,18 @@ class BottomNavigationActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, HomeFragment())
                 .commit()
         }
+
+        // Наблюдаем за изменениями баланса кристаллов в ViewModel и обновляем TextView
+        userViewModel.crystalBalance.observe(this, Observer { balance ->
+            // Обновляем текст TextView с текущим балансом
+            textCrystalBalance.text = getString(R.string.crystal_balance_format, balance) // Используем строковый ресурс для форматирования
+        })
+
+        // Возможно, вам нужно вызвать метод в userViewModel для загрузки начального баланса при создании активности
     }
 }
+
+
+// TODO: Реализовать UserViewModel с LiveData для crystalBalance
+// TODO: Реализовать загрузку начального баланса при создании UserViewModel
+// TODO: Реализовать логику обновления баланса (например, после покупок) в UserViewModel

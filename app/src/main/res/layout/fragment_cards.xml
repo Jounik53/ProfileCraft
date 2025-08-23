@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <!-- Layout для отображения карточек с описаниями -->
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -16,7 +17,8 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:gravity="center"
-            android:text="[Profile Description]" /> <!-- Placeholder text -->
+            android:text="[Profile Description]" /> <!-- Текстовое поле для отображения описания -->
+        <!-- Здесь будет отображаться текст анкеты. Логика смахивания будет реализована в коде фрагмента. -->
 
     </FrameLayout>
 

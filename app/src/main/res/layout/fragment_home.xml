@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <!-- Заголовок экрана Главная -->
     <TextView
         android:id="@+id/text_home_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Home Screen - News and Examples"
-        android:layout_gravity="center_horizontal"
+        android:text="@string/title_home"
         android:layout_marginVertical="16dp"
         android:textSize="24sp" />
 
+    <!-- Кнопка для запуска генерации описания -->
+    <Button
+        android:id="@+id/button_generate_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Сгенерировать описание"
+        android:layout_marginBottom="16dp"/>
+
+
+    <!-- RecyclerView для отображения примеров описаний профиля -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_descriptions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:paddingHorizontal="8dp"
-        android:clipToPadding="false"
+        android:clipToPadding="false" 
+        android:layout_marginBottom="16dp"
         android:scrollbars="vertical" />
 
-</LinearLayout>
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Home Screen - News and Examples"
-        android:textSize="24sp" />
-
-</LinearLayout>
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Home Screen - News and Examples"
-        android:textSize="24sp" />
+    <!-- RecyclerView для отображения последних новостей -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_news"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="8dp"
+        android:clipToPadding="false" 
+        android:scrollbars="vertical" />
 
 </LinearLayout>

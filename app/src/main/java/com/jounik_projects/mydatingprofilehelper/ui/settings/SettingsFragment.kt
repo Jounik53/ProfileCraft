@@ -1,6 +1,7 @@
 package com.jounik_projects.mydatingprofilehelper.ui.settings
 
 import android.os.Bundle
+import android.content.Intent // Импортируем Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,11 @@ import androidx.fragment.app.viewModels
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.jounik_projects.mydatingprofilehelper.R
+import com.jounik_projects.mydatingprofilehelper.ui.login.YourLoginActivity // Замените на вашу Activity входа
+import android.widget.Button // Import Button
 import android.widget.Spinner
 import android.widget.TextView
+import com.jounik_projects.mydatingprofilehelper.utils.LocaleHelper // Импортируем LocaleHelper
 
 
 
@@ -61,7 +65,10 @@ class SettingsFragment : Fragment() {
                 // Вызов функции setLanguage в SettingsViewModel для сохранения выбранного языка
                 settingsViewModel.setLanguage(selectedLanguageCode)
                 // Примечание: Применение изменения локали требует перезапуска активности или специальной обработки
-                // Примечание: Применение изменения локали требует перезапуска активности или специальной обработки
+                // Устанавливаем новую локаль
+                LocaleHelper.setLocale(requireContext(), selectedLanguageCode)
+                // Пересоздаем активность, чтобы применить изменение языка
+                activity?.recreate()
  }
             
  override fun onNothingSelected(parent: AdapterView<*>) {
@@ -139,6 +146,23 @@ class SettingsFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Ничего не делать
             }
+        }
+
+        // Привязка кнопки выхода
+        val logoutButton = view.findViewById<Button>(R.id.button_logout) // Предполагается, что у вас есть кнопка с ID button_logout
+
+        // Установка слушателя клика на кнопку выхода
+        logoutButton.setOnClickListener {
+            // TODO: Выход из Google аккаунта
+            // Например: googleSignInClient.signOut()
+            // Возможно, также потребуется googleSignInClient.revokeAccess() для полного отзыва доступа
+            // Логика очистки токенов аутентификации и локальных данных пользователя
+            //AuthTokenProvider.clearToken() // Раскомментируйте и реализуйте очистку токена
+
+            // Создаем Intent для перехода на Activity входа
+            val intent = Intent(activity, YourLoginActivity::class.java) // Замените YourLoginActivity на вашу Activity входа
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Очищаем стек активностей
+            startActivity(intent) // Запускаем Activity входа
         }
 
  return view
