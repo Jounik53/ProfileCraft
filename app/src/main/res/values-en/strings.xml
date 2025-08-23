@@ -12,6 +12,9 @@
     <string name="menu_cards">Cards</string>
     <string name="menu_settings">Settings</string>
 
+    <!-- History Screen -->
+    <string name="title_history">History</string>
+
     <!-- Profile Screen -->
     <string name="profile_screen_title">Profile</string>
     <string name="name_label">Name:</string>
@@ -21,6 +24,9 @@
     <string name="crystals_balance_label">Crystals Balance:</string>
     <string name="save_button_text">Save</string>
     <string name="edit_profile_hint">Edit your profile description here</string>
+    
+    <!-- Button for generating profile description -->
+    <string name="button_generate_profile">Generate Profile Description</string>
 
     <!-- Home Screen -->
     <string name="home_screen_title">Home</string>
@@ -38,5 +44,13 @@
     <string name="theme_setting_label">Theme</string>
     <string name="theme_option_light">Light</string>
     <string name="theme_option_dark">Dark</string>
+
+    <!-- Gender options -->
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="label_gender">Gender</string>
+
+    <!-- Button for buying crystals -->
+    <string name="button_buy_crystals">Buy Crystals</string>
 
 </resources>

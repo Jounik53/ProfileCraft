@@ -32,4 +32,16 @@ data class UserProfile(
      * The user's local currency balance (crystals).
      */
     var crystals: Int = 0
+    /**
+ * Пол пользователя.
+ */
+    var gender: String = "" // Или используйте enum для определения пола
+    /**
+     * Имя пользователя Telegram.
+     */
+    var telegramUsername: String = ""
+    /**
+     * Номер телефона пользователя.
+     */
+    var phoneNumber: String = ""
 )

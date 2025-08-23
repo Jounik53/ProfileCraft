@@ -13,10 +13,6 @@ import com.jounik_projects.mydatingprofilehelper.databinding.FragmentCardsBindin
 
 import androidx.lifecycle.Observer // Import Observer
 
-/**
- * A simple [Fragment] subclass representing the Cards screen.
- * This screen will display profile descriptions as swipeable cards.
- */
 class CardsFragment : Fragment() {
     // TODO: Implement card swiping logic and display profile descriptions
 
@@ -35,16 +31,25 @@ class CardsFragment : Fragment() {
         _binding = FragmentCardsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        // Привязка элементов UI из сгенерированного binding класса
         // Bind the TextView for displaying the description
-        val descriptionTextView: TextView = binding.descriptionTextView // Assuming the ID is descriptionTextView in fragment_cards.xml
+ val descriptionTextView: TextView = binding.descriptionTextView // Предполагается, что ID в fragment_cards.xml - descriptionTextView
 
-        // Initial call to load the first card
+        // Начальная загрузка первой карточки
         cardsViewModel.loadCards()
 
+        // Наблюдение за данными текущей карточки из ViewModel
         // Observe the current card data from the ViewModel
         cardsViewModel.currentCard.observe(viewLifecycleOwner, Observer { cardDescription ->
-            // TODO: Update UI to display the current cardDescription
+            // TODO: Update UI to display the current cardDescription // Обновление UI для отображения текущего описания карточки
+            descriptionTextView.text = cardDescription?.text // Пример: отображение текста описания
         })
+
+        // Наблюдение за состоянием загрузки или ошибками (опционально)
+        // Observe loading or error states (optional)
+        // cardsViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading -> /* Handle loading state */ })
+        // cardsViewModel.error.observe(viewLifecycleOwner, Observer { error -> /* Handle error */ })
+
 
         // Observe the history of swiped cards from the ViewModel
         cardsViewModel.swipedCardsHistory.observe(viewLifecycleOwner, Observer { history ->

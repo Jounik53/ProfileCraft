@@ -1,0 +1,71 @@
+@{
+    // Указываем модель, которая будет использоваться в этом представлении
+    @model MyDatingProfileHelper.Backend.AdminWebApp.Models.LoginModel
+    // Устанавливаем заголовок страницы
+    ViewData["Title"] = "Вход для администратора";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            @*
+                Создаем форму для отправки данных логина.
+                asp-controller и asp-action указывают, какой контроллер и метод обработают форму.
+                asp-route-returnUrl используется для перенаправления пользователя после успешного входа.
+                method="post" указывает, что данные будут отправлены методом POST.
+            *@
+            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <h4>Используйте локальную учетную запись для входа.</h4>
+                <hr />
+                @*
+                    Выводим ошибки валидации (если есть) для всего объекта модели.
+                    asp-validation-summary="All" отображает все ошибки.
+                *@
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    @*
+                        Создаем поле ввода для имени пользователя.
+                        asp-for="Username" связывает это поле с свойством Username модели.
+                        class="form-control" - базовый класс Bootstrap для стилизации формы.
+                    *@
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" class="form-control" />
+                    @*
+                        Выводим ошибки валидации для конкретного поля Username.
+                        asp-validation-for="Username" связывает вывод ошибок с свойством Username модели.
+                        class="text-danger" - базовый класс Bootstrap для стилизации текста ошибок.
+                    *@
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @*
+                        Создаем поле ввода для пароля.
+                        asp-for="Password" связывает это поле с свойством Password модели.
+                        class="form-control" - базовый класс Bootstrap для стилизации формы.
+                    *@
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    @*
+                        Выводим ошибки валидации для конкретного поля Password.
+                        asp-validation-for="Password" связывает вывод ошибок с свойством Password модели.
+                        class="text-danger" - базовый класс Bootstrap для стилизации текста ошибок.
+                    *@
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @* Кнопка отправки формы *@
+                    <button type="submit" class="btn btn-primary">Вход</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        // Подключаем скрипты для клиентской валидации
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

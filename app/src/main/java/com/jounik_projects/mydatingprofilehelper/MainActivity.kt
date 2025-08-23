@@ -2,17 +2,23 @@ package com.jounik_projects.mydatingprofilehelper
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.drive.Drive
-import com.google.android.gms.drive.DriveContents
 import com.google.android.gms.common.api.ApiException
-import com.jounik_projects.mydatingprofilehelper.data.repository.UserRepository
+import com.jounik_projects.mydatingprofilehelper.data.network.api.AuthApi
+import com.jounik_projects.mydatingprofilehelper.data.network.model.GoogleLoginRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,20 +26,18 @@ class MainActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 9001 // Request code for Google Sign-In
     // Request code for Google Sign-In
 
+    // TODO: Переместить базовый URL бэкенда в файл конфигурации
+    private val BASE_URL = "http://10.0.2.2:5000" // Пример: URL бэкенда (10.0.2.2 для эмулятора Android)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // Set the content view to the activity_main layout. This layout will contain the Google Sign-In button.
 
         // Configure Google Sign-in to request the user's ID, email address, and basic profile information.
-        // DEFAULT_SIGN_IN is a convenience option that requests the ID and basic profile.
-        // requestEmail() explicitly requests the user's email address.
-        // requestScopes(com.google.android.gms.drive.DriveContents.SCOPE_APPFOLDER) requests permission to access the app-specific folder on Google Drive for data backup.
-
-        // Configure Google Sign-in to request the user's ID, email, and basic profile.
-        // Also request the DriveContentsScope to access user's Google Drive files.
+        // DEFAULT_SIGN_IN это удобный вариант, который запрашивает ID и базовый профиль.
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail().requestScopes(DriveContents.SCOPE_APPFOLDER) // Request scope for app-specific folder on Drive
+            .requestEmail() // Явно запрашиваем адрес электронной почты пользователя
             .build()
 
         // Build a GoogleSignInClient with the options specified by gso.
@@ -78,26 +82,66 @@ class MainActivity : AppCompatActivity() {
         try {
             // Attempt to get the signed-in account from the completed task.
             // getResult(ApiException::class.java) will throw an ApiException if the sign-in failed.
+            // Попытка получить аккаунт из завершенной задачи.
+            // getResult(ApiException::class.java) выбросит ApiException, если вход не удался.
             val account = completedTask.getResult(ApiException::class.java)
 
             // Signed in successfully.
             // 'account' now contains the signed-in user's Google account information.
+            // Вход выполнен успешно.
+            // 'account' теперь содержит информацию о Google аккаунте пользователя.
 
-            // Obtain a DriveClient from the signed-in GoogleSignInAccount.
-            val driveClient = Drive.getDriveClient(this, account)
+            // Получаем Google ID Token
+            val idToken = account?.idToken
 
-            // Create an instance of UserRepository.
-            // In a real application, this might be managed by a dependency injection framework.
-            val userRepository = UserRepository() // Initialize your UserRepository
+            if (idToken != null) {
+                // Если токен получен, отправляем его на бэкенд для авторизации
+                authenticateWithBackend(idToken)
+            } else {
+                // TODO: Обработка случая, когда Google Token не был получен
+                Log.e("MainActivity", "Google ID Token не получен")
+            }
 
-            // Now you can potentially load the user's profile from Google Drive.
-            // This operation should be handled asynchronously.
-            // For now, we just call the function with a comment.
-            // userRepository.loadProfileFromDrive(driveClient) // Implement loading logic here
-
-            // TODO: Navigate to the next activity (e.g., BottomNavigationActivity)
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
+            // Код статуса ApiException указывает на подробную причину сбоя.
+            Log.w("MainActivity", "Ошибка входа Google:" + e.statusCode)
+            // TODO: Обновить UI с сообщением об ошибке
+        }
+    }
+
+    /**
+     * Sends the Google ID Token to the backend for authentication and obtains a JWT.
+     */
+    private fun authenticateWithBackend(googleToken: String) {
+        // Создаем экземпляр Retrofit
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        // Создаем экземпляр AuthApi
+        val authApi = retrofit.create(AuthApi::class.java)
+
+        // Выполняем запрос к бэкенду в корутине (асинхронно)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val requestBody = GoogleLoginRequest(googleToken)
+                val response = authApi.googleLogin(requestBody)
+
+                if (response.isSuccessful && response.body() != null) {
+                    val jwt = response.body()!!.jwt
+                    // TODO: Сохранить JWT безопасным способом (например, в SharedPreferences или Keystore)
+                    Log.d("MainActivity", "Авторизация на бэкенде успешна. Получен JWT: $jwt")
+                    // TODO: Переход на следующий экран (например, BottomNavigationActivity)
+                } else {
+                    // TODO: Обработка ошибки авторизации на бэкенде
+                    Log.e("MainActivity", "Ошибка авторизации на бэкенде: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                // TODO: Обработка сетевой ошибки
+                Log.e("MainActivity", "Сетевая ошибка при авторизации на бэкенде", e)
+            }
         }
     }
 }

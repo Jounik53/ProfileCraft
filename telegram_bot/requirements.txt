@@ -1,0 +1,2 @@
+aiogram              # Библиотека для работы с Telegram Bot API
+requests             # Library for making HTTP requests to the backend

@@ -1,0 +1,127 @@
+@* Указываем модель представления *@
+@model MyDatingProfileHelper.Backend.AdminWebApp.Models.DashboardViewModel
+
+@{ ViewData["Title"] = "Панель администратора"; }
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h2>Статистика пользователей</h2>
+    @* Отображаем количество зарегистрированных пользователей из модели *@
+    <p>Общее количество зарегистрированных пользователей: @Model.RegisteredUserCount</p>
+    @* Здесь можно добавить график регистрации пользователей по времени (день, месяц, год) *@
+    <h3>График регистрации пользователей (за последний день, месяц, год)</h3>
+    <div id="userRegistrationChart">
+        <!-- Placeholder для графика -->
+        <p>Место для графика регистрации пользователей.</p>
+    </div>
+    
+    @* Здесь можно добавить выбор промежутка времени для графика *@
+    <label for="registrationInterval">Выбор промежутка:</label>
+    <select id="registrationInterval">
+        <option value="day">День</option>
+        <option value="month">Месяц</option>
+        <option value="year">Год</option>
+    </select>
+    
+    @* Кнопка или JavaScript для обновления статистики по выбранному интервалу *@
+    @* В данном случае обновление будет происходить по событию change select *@
+    @* Если нужна отдельная кнопка, можно добавить: *@
+    @* <button id="updateCrystalStats">Обновить статистику кристаллов</button> *@
+    @* И добавить обработчик события click для этой кнопки *@
+
+</div>
+
+<div>
+    <h2>Статистика кристаллов</h2>
+    @* Отображаем статистику кристаллов из модели *@
+    <p>Куплено кристаллов: @Model.CrystalStatistics?.TotalCredited</p>
+    <p>Потрачено кристаллов: @Model.CrystalStatistics?.TotalDebited</p>
+    
+    @* Здесь можно добавить график статистики кристаллов по времени *@
+    <h3>Статистика кристаллов по времени</h3>
+    <div id="crystalStatisticsChart">
+        <!-- Placeholder для графика -->
+        <p>Место для графика статистики кристаллов.</p>
+    </div>
+    
+    @* Здесь можно добавить выбор промежутка времени для графика *@
+    <label for="crystalInterval">Выбор промежутка:</label>
+    <select id="crystalInterval">
+        <option value="day">День</option>
+        <option value="month">Месяц</option>
+        <option value="year">Год</option>
+    </select>
+</div>
+
+<div>
+    <h2>Статистика запросов к API</h2>
+    @* Отображаем статистику запросов к API из модели *@
+    <p>Общее количество запросов к API: @Model.ApiRequestStatistics?.TotalRequests</p>
+    
+    @* Здесь можно добавить график запросов к API по времени *@
+    <h3>График запросов к API</h3>
+    <div id="apiRequestsChart">
+        <!-- Placeholder для графика -->
+        <p>Место для графика запросов к API.</p>
+    </div>
+    
+     @* Здесь можно добавить выбор промежутка времени для графика *@
+    <label for="apiInterval">Выбор промежутка:</label>
+    <select id="apiInterval">
+        <option value="day">День</option>
+        <option value="month">Месяц</option>
+        <option value="year">Год</option>
+    </select>
+</div>
+
+@* Возможность загрузки БД *@
+<div>
+    <h2>Управление базой данных (Загрузка резервной копии)</h2>
+    <button>Загрузить резервную копию базы данных</button>
+    @* Обратите внимание: Реализация загрузки/восстановления БД требует тщательного подхода к безопасности и обработке файлов. *@
+</div>
+
+@* Скрипты для графиков и взаимодействия *@
+@section Scripts {
+    <script>
+        // Здесь будут скрипты для загрузки данных и построения графиков
+        // Можно использовать библиотеки для построения графиков (например, Chart.js, D3.js)
+        $(document).ready(function () {
+            // Пример загрузки данных (нужно реализовать логику взаимодействия с бэкендом)
+            loadUserData('month'); // Загрузить данные за месяц по умолчанию
+
+            $('#registrationInterval').change(function() {
+                loadUserData($(this).val());
+            });
+             $('#crystalInterval').change(function() {
+                loadCrystalData($(this).val());
+            });
+              $('#apiInterval').change(function() {
+                loadApiData($(this).val());
+            });
+
+            function loadUserData(interval) {
+                // AJAX запрос к эндпоинту системного контроллера для статистики пользователей
+                console.log('Загрузка данных пользователей за: ' + interval);
+                // $.get('/api/System/RegisteredUserCount?interval=' + interval, function(data) {
+                //     // Обновить UI и построить график
+                // });
+            }
+             function loadCrystalData(interval) {
+                // AJAX запрос к эндпоинту системного контроллера для статистики кристаллов
+                 console.log('Загрузка данных кристаллов за: ' + interval);
+                // $.get('/api/System/CrystalStatistics?interval=' + interval, function(data) {
+                //     // Обновить UI и построить график
+                // });
+            }
+              function loadApiData(interval) {
+                // AJAX запрос к эндпоинту системного контроллера для статистики API запросов
+                 console.log('Загрузка данных API запросов за: ' + interval);
+                // $.get('/api/System/ApiRequestStatistics?interval=' + interval, function(data) {
+                //     // Обновить UI и построить график
+                // });
+            }
+        });
+    </script>
+}

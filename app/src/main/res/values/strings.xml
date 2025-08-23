@@ -6,11 +6,16 @@
     <string name="button_sign_in_google">Войти через Google</string>
     <string name="button_save_profile">Сохранить профиль</string>
 
+    <!-- Button for buying crystals -->
+    <string name="button_buy_crystals">Купить кристаллы</string>
+
+    <!-- Button for generating profile description -->
     <!-- Screen titles (placeholder) -->
     <string name="title_profile">Профиль</string>
     <string name="title_home">Главная</string>
     <string name="title_cards">Карточки</string>
     <string name="title_settings">Настройки</string>
+    <string name="title_history">История</string>
 
     <!-- Profile screen labels -->
     <string name="label_name">Имя:</string>
@@ -39,5 +44,11 @@
     <string name="message_not_enough_crystals">Недостаточно кристаллов</string>
     <string name="message_payment_successful">Оплата прошла успешно</string>
     <string name="message_payment_failed">Ошибка оплаты</string>
+
+    <!-- Gender options -->
+    <string name="label_gender">Пол:</string>
+    <string name="gender_male">Мужской</string>
+    <string name="gender_female">Женский</string>
+    <string name="button_generate_profile">Сгенерировать анкету</string>
 
 </resources>

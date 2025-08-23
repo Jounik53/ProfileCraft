@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Установка типа проекта как тестовой библиотеки -->
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Используем NUnit как тестовый фреймворк -->
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+
+    <!-- Пакет для создания Mock-объектов -->
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
+
+    <!-- Пакет для написания утверждений в стиле Should -->
+    <PackageReference Include="Shouldly" Version="4.2.1" />
+
+    <!-- Пакет для покрытия кода (опционально) -->
+    <PackageReference Include="coverlet.collector" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Ссылка на проект Application, который будем тестировать -->
+    <ProjectReference Include="..\..\src\MyDatingProfileHelper.Backend.Application\MyDatingProfileHelper.Backend.Application.csproj" />
+  </ItemGroup>
+
+</Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Установка типа проекта как тестовой библиотеки -->
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Выберите один из тестовых фреймворков: NUnit, xUnit, или MSTest -->
+    <!-- Пример для NUnit -->
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+
+    <!-- Пример для xUnit (раскомментируйте, если используете xUnit) -->
+    <!-- <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" /> -->
+    <!-- <PackageReference Include="xunit" Version="2.4.2" /> -->
+    <!-- <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" /> -->
+
+    <!-- Пример для MSTest (раскомментируйте, если используете MSTest) -->
+    <!-- <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" /> -->
+    <!-- <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" /> -->
+    <!-- <PackageReference Include="MSTest.TestFramework" Version="3.0.4" /> -->
+
+    <!-- Пакет для создания Mock-объектов -->
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
+
+    <!-- Пакет для написания утверждений в стиле Should -->
+    <PackageReference Include="Shouldly" Version="4.2.1" />
+
+    <!-- Пакет для покрытия кода (опционально) -->
+    <PackageReference Include="coverlet.collector" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Ссылка на проект Application, который будем тестировать -->
+    <ProjectReference Include="..\..\src\MyDatingProfileHelper.Backend.Application\MyDatingProfileHelper.Backend.Application.csproj" />
+  </ItemGroup>
+
+</Project>

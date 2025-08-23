@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Мой профиль"
+ android:textColor="@android:color/black"
         android:textSize="24sp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"/>
@@ -26,96 +27,159 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Имя:"
+ android:text="Имя:"
         android:textStyle="bold"/>
     <EditText
         android:id="@+id/editTextProfileName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Введите ваше имя"
-        android:layout_marginBottom="8dp"/>
+ android:inputType="textPersonName"
+ android:layout_marginBottom="8dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Цели знакомства:"
+ android:text="Фото:"
         android:textStyle="bold"/>
-    <EditText
-        android:id="@+id/editTextDatingGoals"
+ <!-- Добавьте элементы UI для управления фотографиями, например, кнопки "Добавить фото" и контейнер для миниатюр -->
+ <LinearLayout
+ android:id="@+id/layoutProfilePhotos"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:orientation="horizontal"
+ android:layout_marginBottom="8dp">
+ <!-- Миниатюры фотографий будут добавляться сюда динамически -->
+ </LinearLayout>
+ <Button
+ android:id="@+id/buttonAddPhoto"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Добавить фото"
+ android:layout_marginBottom="8dp"/>
+
+ <TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Интересы:"
+ android:textStyle="bold"/>
+ <EditText
+ android:id="@+id/editTextInterests"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:hint="Перечислите ваши интересы через запятую"
+ android:layout_marginBottom="8dp"/>
+
+ <TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Что не нравится:"
+ android:textStyle="bold"/>
+ <EditText
+ android:id="@+id/editTextDislikes"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:hint="Что вам не нравится через запятую"
+ android:layout_marginBottom="8dp"/>
+
+ <TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Вредные привычки:"
+ android:textStyle="bold"/>
+ <!-- Изменено на вредные привычки -->
+ <EditText
+ android:id="@+id/editTextHarmfulHabits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Опишите ваши цели"
+ android:hint="Опишите ваши вредные привычки (или их отсутствие)"
         android:layout_marginBottom="8dp"/>
+
+    <!-- Добавлен выбор пола -->
+ <TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="@string/label_gender"
+ android:textStyle="bold"/>
+ <RadioGroup
+ android:id="@+id/radioGroupGender"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:orientation="horizontal"
+ android:layout_marginBottom="8dp">
+ <!-- Добавлены RadioButtons для выбора пола -->
+ <RadioButton
+ android:id="@+id/radioButtonMale"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="@string/gender_male"/>
+ <RadioButton
+ android:id="@+id/radioButtonFemale"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="@string/gender_female"/>
+ </RadioGroup>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Описание:"
+ android:text="Краткое описание о себе:"
         android:textStyle="bold"/>
     <EditText
         android:id="@+id/editTextProfileDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Напишите о себе"
-        android:minLines="3"
-        android:gravity="top"
-        android:layout_marginBottom="16dp"/>
+ android:inputType="textMultiLine"
+ android:minLines="3"
+ android:gravity="top"
+ android:layout_marginBottom="8dp"/>
+
+ <TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Внешние параметры:"
+ android:textStyle="bold"/>
+ <!-- Можно использовать несколько EditText или один с несколькими строками -->
+ <EditText
+ android:id="@+id/editTextPhysicalParameters"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:hint="Рост, цвет волос, телосложение и т.д."
+ android:inputType="textMultiLine|textCapSentences"
+ android:gravity="top"
+ android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/textViewCrystalBalance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Кристаллы: 0"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:text="Кристаллы: 0"
+ />
+
+    <!-- Кнопка для перехода в Telegram бота для покупки кристаллов -->
+    <Button
+        android:id="@+id/buttonBuyCrystals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/button_buy_crystals"
         android:layout_marginBottom="16dp"/>
 
     <Button
-        android:id="@+id/buttonSaveProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Сохранить профиль"
+        android:layout_gravity="center_horizontal"
+ android:layout_marginBottom="16dp"/>
+
+ <!-- Кнопка для запуска генерации анкеты -->
+    <Button
+        android:id="@+id/buttonGenerateProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Сгенерировать анкету"
         android:layout_gravity="center_horizontal"/>
-
-</LinearLayout>
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile Fragment"
-        android:textSize="24sp" />
-
-</LinearLayout>
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile Screen"
-        android:textSize="24sp" />
-
-</LinearLayout>
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile Screen"
-        android:textSize="24sp" />
-
 </LinearLayout>
